@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import UserItem from './UserItem'
+import UserItem from './UserItem'  // <--- This is how we can create the UserItem tag below.
 
 class Users extends Component {
     state = {
@@ -25,11 +25,11 @@ class Users extends Component {
         ]
     }
     render() {
-        const {users, id, avatar_url, html_url, login} = this.state
+        const {users, id, avatar_url, html_url, login} = this.state // <--- More destructuring.
         return (
             <div style={userStyle}>
                 {users.map(user => (
-                    <UserItem key={user.id} user={user}></UserItem>
+                    <UserItem key={user.id} user={user} /> // <--- Using this tag sends it to UserItem component
                 ))}
             </div>
         )

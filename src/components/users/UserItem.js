@@ -1,6 +1,25 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
-export class Useritem extends Component {
+
+// This is the same as below: function UserItems () {...}
+const UserItem = (props) => {
+    // Alternatively you could destructure like this:
+    // const UserItem = ({user: { login, avatar_url, html_url }}) => {...}
+    // you would then remove your line 8
+    const { login, avatar_url, html_url} = props.user; // <--- Pulls the destructured values from the prop user that we generated in the Users.js
+    return (
+        <div className='card text-center'>
+            <img src={avatar_url} alt="#" className="round-img" style={{ width:'60px'}}/>
+            <h3>{login}</h3>
+            <div>
+                <a href={html_url} className="btn btn-dark btn-sm my-1">More</a>
+            </div>
+        </div>
+    )
+}
+
+    // This is another option for how to declare state. Constructors will run when components are called.
     // constructor(){
     //     super();
     //     this.state = {
@@ -17,19 +36,9 @@ export class Useritem extends Component {
     //             html_url: 'https://github.com/mojombo'
     //         }
 
-    render() {
-        // if you find yourself calling "this.state..." alot then you can destructure
-        const { login, avatar_url, html_url} = this.props.user;
-        return (
-            <div className='card text-center'>
-                <img src={avatar_url} alt="#" className="round-img" style={{ width:'60px'}}/>
-                <h3>{login}</h3>
-                <div>
-                    <a href={html_url} className="btn btn-dark btn-sm my-1">More</a>
-                </div>
-            </div>
-        )
-    }
+
+UserItem.propTypes = {
+    user: PropTypes.object.isRequired,
 }
 
-export default Useritem
+export default UserItem
