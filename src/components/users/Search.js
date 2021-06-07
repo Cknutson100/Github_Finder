@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 export class Search extends Component {
 
@@ -6,12 +7,19 @@ export class Search extends Component {
         text: ''
     }
 
+    static propTypes = {
+        searchUsers: PropTypes.func.isRequired
+    }
+
     onSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state.text);
+        this.props.searchUsers(this.state.text);
+        this.setState({ text: ''});
     }
 
     onChange = (e) => {
+        // this will dynamically change all state based inputs in the component.
+        // in this example, e.target.value will change the value of text='' in the state object above.
         this.setState({[e.target.name]: e.target.value});
     }
 
@@ -20,9 +28,12 @@ export class Search extends Component {
             <div>
                 <form onSubmit={this.onSubmit} className='form'>
                     <input type="text" 
+                    // This name is what lets the dynamic onChange function above work.
                     name='text' 
                     placeholder='Search Users...' 
+                    // This assigns the value of our input to whatever the text:'' state is set to.
                     value={this.state.text}
+                    // This allows us to write in our state based input field.
                     onChange={this.onChange}
                     />
                     <input type="submit" value="Search" className='btn btn-dark btn-block' />
