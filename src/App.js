@@ -8,7 +8,8 @@ import './App.css';
 class App extends React.Component{
   state = {
     users: [],
-    loading: false  // There is going to be a moment in time before we get data back. While its fetching Loading will be True.
+    loading: false,  // There is going to be a moment in time before we get data back. While its fetching Loading will be True.
+    alert: null,     // This creates a piece of state that is default set to null for alert.
   }
 
   // This lifecycle method, will fire off when the app is first run, when the App component "mounts"
@@ -38,6 +39,10 @@ class App extends React.Component{
 
   // Clear users from state:
   clearUsers = () => this.setState({ users: [], loading: false, })
+  // Set Alert taking in msg and type
+  setAlert = (msg, type) => { 
+    this.setState({alert: {msg:msg, type:type}}); // When this function is called it will set alert state to the passed in parameters
+  }
 
     render() {
       const { users, loading } = this.state;
@@ -46,7 +51,11 @@ class App extends React.Component{
         <div className="App">
           <Navbar />
           <div className="container">
-            <Search searchUsers={this.searchUsers} clearUsers={this.clearUsers} showClear={users.length > 0 ? true : false}/>
+            <Search searchUsers={this.searchUsers} 
+            clearUsers={this.clearUsers} 
+            showClear={users.length > 0 ? true : false}
+            setAlert={this.setAlert} // This adds a property to search allowing it to call setAlert function
+            />
             <Users loading={loading} users={users}/>
           </div>
 
