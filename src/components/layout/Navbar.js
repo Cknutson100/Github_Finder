@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 
 // This is the strucuture for functional based components:
 const Navbar = ({icon, title}) => {
@@ -9,6 +10,15 @@ const Navbar = ({icon, title}) => {
                 <h1>
                     <i className={icon}></i> {title}
                 </h1>
+                <ul>
+                    <li>
+                        {/* It's bad practice to use a-tags when you are working in React with React Router. You should use Link. */}
+                        <Link to="/">Home</Link> 
+                    </li>
+                    <li>
+                        <Link to="/about">About</Link>
+                    </li>
+                </ul>
             </nav>
         )
 }
