@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Alert = ({ alert }) => {
+const AlertMe = ({ alert }) => {
     return (
         // This part of the code makes it so that if alert is activated then it shows the div
         alert !== null && (
@@ -13,4 +13,4 @@ const Alert = ({ alert }) => {
     )
 }
 
-export default Alert
+export default AlertMe

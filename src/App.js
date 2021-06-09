@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from './components/layout/Navbar.js';
 import Users from './components/users/Users.js';
 import Search from './components/users/Search.js';
-import Alert from "/.components/layout/Alert.js";
+import AlertMe from "./components/layout/AlertMe";
 import axios from 'axios';
 import './App.css';
 
@@ -29,6 +29,7 @@ import './App.css';
   // Set Alert taking in msg and type
   setAlert = (msg, type) => { 
     this.setState({alert: {msg:msg, type:type}}); // When this function is called it will set alert state to the passed in parameters.
+    setTimeout(() => this.setState({ alert: null}), 4000 );
   }
 
     render() {
@@ -38,7 +39,7 @@ import './App.css';
         <div className="App">
           <Navbar />
           <div className="container">
-            <Alert alert={alert}/>
+            <AlertMe alert={alert}/>
             <Search searchUsers={this.searchUsers} 
             clearUsers={this.clearUsers} 
             showClear={users.length > 0 ? true : false}
