@@ -2,19 +2,24 @@ import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Navbar from './components/layout/Navbar.js';
 import Users from './components/users/Users.js';
+import User from './components/users/User.js';
 import Search from './components/users/Search.js';
 import AlertMe from "./components/layout/AlertMe";
 import About from "./components/pages/About";
 import axios from 'axios';
 import './App.css';
 
- class App extends React.Component{
+ class App extends React.Component {
   state = {
     users: [],
+    user: {},
     loading: false,  // There is going to be a moment in time before we get data back. While its fetching Loading will be True.
     alert: null,     // This creates a piece of state that is default set to null for alert.
+    repos: [],
   }
 
+  //-------------------------------------------------------------------------------
+  // FUNCTIONS
   // Search Github users:
   searchUsers = async (text) => {
     this.setState({loading:true})
@@ -26,6 +31,14 @@ import './App.css';
 
     this.setState({users: res.data.items, loading:false}) // this is how you change a state's value.
   }
+  // Get single Github user:
+  getUser = async (username) => {
+    this.setState({loading: true});
+
+    const res = await axios.get(`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+
+    this.setState({user: res.data, loading: false});
+  }
   // Clear users from state:
   clearUsers = () => this.setState({ users: [], loading: false, })
   // Set Alert taking in msg and type
@@ -34,8 +47,20 @@ import './App.css';
     setTimeout(() => this.setState({ alert: null}), 4000 );
   }
 
+  // Get Users Repos
+  getUserRepos = async (username) => {
+    this.setState({loading: true});
+
+    const res = await axios.get(`https://api.github.com/users/${username}/repos?per_page=5&
+    sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&
+    client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+
+    this.setState({repos: res.data, loading: false});
+  }
+  //-------------------------------------------------------------------------------
+
     render() {
-      const { users, loading, alert } = this.state;
+      const { users, loading, alert, user, repos } = this.state;
 
       return (
         <Router>
@@ -54,15 +79,29 @@ import './App.css';
                     <Users loading={loading} users={users}/>
                   </Fragment>
                 )}/>
+                {/* This only works if you dont have to pass anything in. */}
                 <Route exact path='/about' component={ About } />
+                {/* This is how you would create another route if you had pass ins: 
+                    // Here you see User component being called...
+                    // Then we pass in the prop of getUser from the compoent
+                    // which is then set to equal the method/function in App.js getUser
+                    // and finally user={user} we need to send in the state. */}
+                  <Route exact path='/user/:login' render={ props => (
+                  <User 
+                  { ...props } 
+                  getUser={this.getUser}
+                  getUserRepos={this.getUserRepos} 
+                  user={user}
+                  repos={repos} 
+                  loading={loading} />
+                )} />
               </Switch>
             </div>
           </div>
         </Router>
       );
-    }
-  }
-
+    };
+  };
 
 export default App;
 

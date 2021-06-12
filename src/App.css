@@ -260,6 +260,12 @@ img {
   background: var(--light-color);
   color: #333;
 }
+.btn-light-border {
+  border-radius: 3px;
+  border: 1px dotted;
+  background: var(--light-color);
+  color: #333;
+}
 
 .btn-dark,
 .bg-dark,
