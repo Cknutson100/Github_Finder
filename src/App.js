@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Navbar from './components/layout/Navbar.js';
 import Users from './components/users/Users.js';
@@ -9,58 +9,68 @@ import About from "./components/pages/About";
 import axios from 'axios';
 import './App.css';
 
- class App extends React.Component {
-  state = {
-    users: [],
-    user: {},
-    loading: false,  // There is going to be a moment in time before we get data back. While its fetching Loading will be True.
-    alert: null,     // This creates a piece of state that is default set to null for alert.
-    repos: [],
-  }
+ const App = () => {
+  // This:
+   const [users, setUsers] = useState([])
+   const [user, setUser] = useState({})
+   const [repos, setRepos] = useState([])
+   const [loading, setLoading] = useState(false)
+   const [alert, setAlert] = useState(null)
+  // Is the same as this except in the functional component...
+  //  state = {
+  //   users: [],
+  //   user: {},
+  //   loading: false,  // There is going to be a moment in time before we get data back. While its fetching Loading will be True.
+  //   alert: null,     // This creates a piece of state that is default set to null for alert.
+  //   repos: [],
+  // }
 
   //-------------------------------------------------------------------------------
-  // FUNCTIONS
+  // FUNCTIONS/METHODS
   // Search Github users:
-  searchUsers = async (text) => {
-    this.setState({loading:true})
-
+  const searchUsers = async (text) => {
+    setLoading(true)
     const res = await axios.get(`https://api.github.com/search/users?q=${text}&
     client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&
     client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
-    console.log(res.data)
 
-    this.setState({users: res.data.items, loading:false}) // this is how you change a state's value.
-  }
+    // this is how you change a state's value with a functional App.js
+    setUsers(res.data.items)
+    setLoading(false) 
+  };
   // Get single Github user:
-  getUser = async (username) => {
-    this.setState({loading: true});
+  const getUser = async (username) => {
+    setLoading(true)
 
     const res = await axios.get(`https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
 
-    this.setState({user: res.data, loading: false});
-  }
-  // Clear users from state:
-  clearUsers = () => this.setState({ users: [], loading: false, })
-  // Set Alert taking in msg and type
-  setAlert = (msg, type) => { 
-    this.setState({alert: {msg:msg, type:type}}); // When this function is called it will set alert state to the passed in parameters.
-    setTimeout(() => this.setState({ alert: null}), 4000 );
-  }
-
+    setUser(res.data)
+    setLoading(false)
+  };
   // Get Users Repos
-  getUserRepos = async (username) => {
-    this.setState({loading: true});
+  const getUserRepos = async (username) => {
+    setLoading(true)
 
     const res = await axios.get(`https://api.github.com/users/${username}/repos?per_page=5&
     sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&
     client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
 
-    this.setState({repos: res.data, loading: false});
-  }
-  //-------------------------------------------------------------------------------
+    setRepos(res.data);
+    setLoading(false);
+  };
+    // Clear users from state:
+    const clearUsers = () => {
+      setUsers([]);
+      setLoading(false);
+    };
+    // Set Alert taking in msg and type
+    const showAlert = (msg, type) => { 
+      setAlert({ msg, type }); // When this function is called it will set alert state to the passed in parameters.
+      setTimeout(() => setAlert(null) , 4000 );
+    };
 
-    render() {
-      const { users, loading, alert, user, repos } = this.state;
+  // END OF CREATED FUNCTIONS/METHODS
+  //-------------------------------------------------------------------------------
 
       return (
         <Router>
@@ -71,10 +81,10 @@ import './App.css';
               <Switch>  
                 <Route exact path='/' render={props => (
                   <Fragment>
-                    <Search searchUsers={this.searchUsers} 
-                    clearUsers={this.clearUsers} 
+                    <Search searchUsers={searchUsers} 
+                    clearUsers={clearUsers} 
                     showClear={users.length > 0 ? true : false}
-                    setAlert={this.setAlert} // This adds a property to search allowing it to call setAlert function
+                    setAlert={showAlert} // This adds a property to search allowing it to call setAlert function
                     />
                     <Users loading={loading} users={users}/>
                   </Fragment>
@@ -89,8 +99,8 @@ import './App.css';
                   <Route exact path='/user/:login' render={ props => (
                   <User 
                   { ...props } 
-                  getUser={this.getUser}
-                  getUserRepos={this.getUserRepos} 
+                  getUser={getUser}
+                  getUserRepos={getUserRepos} 
                   user={user}
                   repos={repos} 
                   loading={loading} />
@@ -100,7 +110,6 @@ import './App.css';
           </div>
         </Router>
       );
-    };
   };
 
 export default App;

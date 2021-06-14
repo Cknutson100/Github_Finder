@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import {Link} from 'react-router-dom'
 
@@ -8,7 +8,7 @@ const UserItem = (props) => {
     // Alternatively you could destructure like this:
     // const UserItem = ({user: { login, avatar_url, html_url }}) => {...}
     // you would then remove your line 8
-    const { login, avatar_url, html_url} = props.user; // <--- Pulls the destructured values from the prop user that we generated in the Users.js
+    const { login, avatar_url} = props.user; // <--- Pulls the destructured values from the prop user that we generated in the Users.js
     return (
         <div className='card text-center'>
             <img src={avatar_url} alt="#" className="round-img" style={{ width:'60px'}}/>

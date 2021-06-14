@@ -1,27 +1,22 @@
-import React, { Fragment, Component } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import Spinner from '../layout/Spinner';
 import Repos from '../repos/Repos'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'
 
 
-export class User extends Component {
-    componentDidMount() {
-        // This is taking the login from the url by using these methods that props has.
-        // then we are passing it in as a prop to the .getUser function.
-        this.props.getUser(this.props.match.params.login)
-        this.props.getUserRepos(this.props.match.params.login)
-    }
+const User = ({ user, loading, getUser, getUserRepos, repos, match }) => {
+    // This is using the useEffect hook. We are calling out getUser and getUserRepos
+    // prop methods from the property box and then inputting the login as a
+    // parameter to each of these method/functions.
+    useEffect(()=>{
+        getUser(match.params.login)
+        getUserRepos(match.params.login)
+        //eslint-disable-next-line
+    }, []); // useEffect will contiuously run request. You stop that by doing this.
+    // additionally you can use the "[]" to define special conds on how you want
+    // useEffect to run.
 
-    static propTypes = {
-        loading: PropTypes.bool,
-        user: PropTypes.object.isRequired,
-        repos: PropTypes.array.isRequired,
-        getUser: PropTypes.func.isRequired,
-        getUserRepos: PropTypes.func.isRequired,
-    }
-
-    render() {
         // This pull all of these variables from this.props.user
         // where user is defined as the axios response to query after
         // we called it in the getUser fxn of App.js
@@ -32,7 +27,6 @@ export class User extends Component {
             bio,
             company,
             blog, 
-            website,
             login,
             html_url,
             followers,
@@ -40,9 +34,8 @@ export class User extends Component {
             public_repos,
             public_gists,
             hireable,
-        } = this.props.user; // This has destructured the user state and created props from it
+        } = user; // This has destructured the user state and created props from it
 
-        const { loading, repos } = this.props;
         if (loading) return <Spinner />;
 
         return (
@@ -98,6 +91,13 @@ export class User extends Component {
             </Fragment>
         )
     }
+
+User.propTypes = {
+    loading: PropTypes.bool,
+    user: PropTypes.object.isRequired,
+    repos: PropTypes.array.isRequired,
+    getUser: PropTypes.func.isRequired,
+    getUserRepos: PropTypes.func.isRequired,
 }
 
 export default User

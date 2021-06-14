@@ -1,50 +1,43 @@
-import React, { Component } from 'react'
+import React, {useState} from 'react'
 import PropTypes from 'prop-types'
 
-export class Search extends Component {
+// In this step of the function you are passing in props which could have been done
+// with (props) but now you are destructuing in the input field of the fxn.
+const Search = ({ searchUsers, showClear, clearUsers, setAlert }) => {
+    //This is using the useState hook from react.
+    // declare and then destructure the state(s) and create a method to change that
+    // state, usually following the format of setNameofstatehere.
+    // finally you set that equal to the react hook and give it a default value.
+    const [text, setText] = useState('');
 
-    state = {
-        text: ''
-    }
-
-    static propTypes = {
-        searchUsers: PropTypes.func.isRequired,
-        clearUsers: PropTypes.func.isRequired,
-        showClear: PropTypes.bool.isRequired,
-        setAlert: PropTypes.func.isRequired,
-    }
-
-    onSubmit = (e) => {
+    // To have a function within a function you need const infront of stuff.
+    const onSubmit = (e) => {
         e.preventDefault();
-        if(this.state.text === '') {
-            this.props.setAlert('Please enter something', 'light')
+        if(text === '') {
+            setAlert('Please enter something', 'light')
         } else {
-            this.props.searchUsers(this.state.text);
-            this.setState({ text: ''});
+            searchUsers(text);
+            setText('')
         }
     }
 
-    onChange = (e) => {
-        // this will dynamically change all state based inputs in the component.
-        // in this example, e.target.value will change the value of text='' in the state object above.
-        this.setState({[e.target.name]: e.target.value});
+    // This dynamically changes the state that we hooked in above.
+    // We no longer need to declare what state we are changing because we
+    // assigned it a method when we hooked it in.
+    const onChange = (e) => {
+        setText(e.target.value);
     }
-
-
-    render() {
-        const { showClear, clearUsers } = this.props;
-
         return (
             <div>
-                <form onSubmit={this.onSubmit} className='form'>
+                <form onSubmit={onSubmit} className='form'>
                     <input type="text" 
                     // This name is what lets the dynamic onChange function above work.
                     name='text' 
                     placeholder='Search Users...' 
                     // This assigns the value of our input to whatever the text:'' state is set to.
-                    value={this.state.text}
+                    value={text}
                     // This allows us to write in our state based input field.
-                    onChange={this.onChange}
+                    onChange={onChange}
                     />
                     <input type="submit" value="Search" className='btn btn-dark btn-block' />
                 </form>
@@ -55,7 +48,12 @@ export class Search extends Component {
             </div>
         )
     }
-}
 
+Search.propTypes = {
+    searchUsers: PropTypes.func.isRequired,
+    clearUsers: PropTypes.func.isRequired,
+    showClear: PropTypes.bool.isRequired,
+    setAlert: PropTypes.func.isRequired,
+}
 
 export default Search
