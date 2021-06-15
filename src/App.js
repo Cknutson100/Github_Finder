@@ -7,6 +7,7 @@ import Search from './components/users/Search.js';
 import AlertMe from "./components/layout/AlertMe";
 import About from "./components/pages/About";
 import axios from 'axios';
+import GithubState from './context/github/GithubState'
 import './App.css';
 
  const App = () => {
@@ -73,42 +74,45 @@ import './App.css';
   //-------------------------------------------------------------------------------
 
       return (
-        <Router>
-          <div className="App">
-            <Navbar />
-            <div className="container">
-              <AlertMe alert={alert}/>
-              <Switch>  
-                <Route exact path='/' render={props => (
-                  <Fragment>
-                    <Search searchUsers={searchUsers} 
-                    clearUsers={clearUsers} 
-                    showClear={users.length > 0 ? true : false}
-                    setAlert={showAlert} // This adds a property to search allowing it to call setAlert function
-                    />
-                    <Users loading={loading} users={users}/>
-                  </Fragment>
-                )}/>
-                {/* This only works if you dont have to pass anything in. */}
-                <Route exact path='/about' component={ About } />
-                {/* This is how you would create another route if you had pass ins: 
-                    // Here you see User component being called...
-                    // Then we pass in the prop of getUser from the compoent
-                    // which is then set to equal the method/function in App.js getUser
-                    // and finally user={user} we need to send in the state. */}
-                  <Route exact path='/user/:login' render={ props => (
-                  <User 
-                  { ...props } 
-                  getUser={getUser}
-                  getUserRepos={getUserRepos} 
-                  user={user}
-                  repos={repos} 
-                  loading={loading} />
-                )} />
-              </Switch>
+        // Notice here how you have to wrap the whole Router in the GithubState tag.
+        <GithubState>
+          <Router>
+            <div className="App">
+              <Navbar />
+              <div className="container">
+                <AlertMe alert={alert}/>
+                <Switch>  
+                  <Route exact path='/' render={props => (
+                    <Fragment>
+                      <Search searchUsers={searchUsers} 
+                      clearUsers={clearUsers} 
+                      showClear={users.length > 0 ? true : false}
+                      setAlert={showAlert} // This adds a property to search allowing it to call setAlert function
+                      />
+                      <Users loading={loading} users={users}/>
+                    </Fragment>
+                  )}/>
+                  {/* This only works if you dont have to pass anything in. */}
+                  <Route exact path='/about' component={ About } />
+                  {/* This is how you would create another route if you had pass ins: 
+                      // Here you see User component being called...
+                      // Then we pass in the prop of getUser from the compoent
+                      // which is then set to equal the method/function in App.js getUser
+                      // and finally user={user} we need to send in the state. */}
+                    <Route exact path='/user/:login' render={ props => (
+                    <User 
+                    { ...props } 
+                    getUser={getUser}
+                    getUserRepos={getUserRepos} 
+                    user={user}
+                    repos={repos} 
+                    loading={loading} />
+                  )} />
+                </Switch>
+              </div>
             </div>
-          </div>
-        </Router>
+          </Router>
+        </GithubState>
       );
   };
 
