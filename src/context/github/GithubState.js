@@ -28,15 +28,32 @@ const GithubState = props => {
     //-------------------------------------------------------------------------------
     // ACTION METHODS:
 
-    // Search Users
+    // Search Users:
+    const searchUsers = async (text) => {
+        setLoading();
+
+        const res = await axios.get(`https://api.github.com/search/users?q=${text}&
+        client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&
+        client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+    
+        // This is how you change a state's value with a REACT REDUCER and Dispatch call.
+        dispatch({ 
+            type: SEARCH_USERS,
+            payload: res.data.items,
+        })
+      };
 
     // Get User
 
     // Get Repos
 
-    // Clear Users search
+    // Clear Users search:
+        const clearUsers = () => dispatch({ type: CLEAR_USERS});
 
     // Set Loading
+    const setLoading = () => {
+        dispatch({ type: SET_LOADING })
+    }
 
     // Set Alert
 
@@ -52,7 +69,8 @@ const GithubState = props => {
             user: state.user,
             repos: state.repos,
             loading: state.loading,
-
+            searchUsers,
+            clearUsers,
 
         }}
     >

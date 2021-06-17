@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar.js';
 import Users from './components/users/Users.js';
 import User from './components/users/User.js';
@@ -29,16 +29,7 @@ import './App.css';
   //-------------------------------------------------------------------------------
   // FUNCTIONS/METHODS
   // Search Github users:
-  const searchUsers = async (text) => {
-    setLoading(true)
-    const res = await axios.get(`https://api.github.com/search/users?q=${text}&
-    client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&
-    client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
 
-    // this is how you change a state's value with a functional App.js
-    setUsers(res.data.items)
-    setLoading(false) 
-  };
   // Get single Github user:
   const getUser = async (username) => {
     setLoading(true)
@@ -59,11 +50,6 @@ import './App.css';
     setRepos(res.data);
     setLoading(false);
   };
-    // Clear users from state:
-    const clearUsers = () => {
-      setUsers([]);
-      setLoading(false);
-    };
     // Set Alert taking in msg and type
     const showAlert = (msg, type) => { 
       setAlert({ msg, type }); // When this function is called it will set alert state to the passed in parameters.
@@ -84,12 +70,10 @@ import './App.css';
                 <Switch>  
                   <Route exact path='/' render={props => (
                     <Fragment>
-                      <Search searchUsers={searchUsers} 
-                      clearUsers={clearUsers} 
-                      showClear={users.length > 0 ? true : false}
+                      <Search
                       setAlert={showAlert} // This adds a property to search allowing it to call setAlert function
                       />
-                      <Users loading={loading} users={users}/>
+                      <Users />
                     </Fragment>
                   )}/>
                   {/* This only works if you dont have to pass anything in. */}
