@@ -18,6 +18,12 @@ export default (state, action) => {
                 users: action.payload,
                 loading: false // Notice that you can set Loading back to false here when you are done with returning users.
             };
+        case GET_USER:
+            return{
+                ...state,
+                user: action.payload,
+                loading: false,
+            }
         case CLEAR_USERS:
             return{
                 ...state,
