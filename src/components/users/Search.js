@@ -1,22 +1,24 @@
 import React, {useState, useContext} from 'react'
-import PropTypes from 'prop-types'
+import alertContext from '../../context/alert/alertContext'
 import GithubContext from '../../context/github/githubContext'
 
 // In this step of the function you are passing in props which could have been done
 // with (props) but now you are destructuing in the input field of the fxn.
-const Search = ({ setAlert }) => {
+const Search = () => {
     //This is using the useState hook from react.
     // declare and then destructure the state(s) and create a method to change that
     // state, usually following the format of setNameofstatehere.
     // finally you set that equal to the react hook and give it a default value.
     const githubContext = useContext(GithubContext)
+    const AlertContext = useContext(alertContext)
+    
     const [text, setText] = useState('');
 
     // To have a function within a function you need const infront of stuff.
     const onSubmit = (e) => {
         e.preventDefault();
         if(text === '') {
-            setAlert('Please enter something', 'light')
+            AlertContext.setAlert('Please enter something', 'light')
         } else {
             githubContext.searchUsers(text);
             setText('')
@@ -51,8 +53,5 @@ const Search = ({ setAlert }) => {
         )
     }
 
-Search.propTypes = {
-    setAlert: PropTypes.func.isRequired,
-}
 
 export default Search

@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react';
+import alertContext from '../../context/alert/alertContext';
 
-const AlertMe = ({ alert }) => {
+const AlertMe = () => {
+    const AlertContext = useContext(alertContext)
+    
+    const { alert } = AlertContext;
     return (
         // This part of the code makes it so that if alert is activated then it shows the div
         alert !== null && (
@@ -10,7 +14,7 @@ const AlertMe = ({ alert }) => {
                 <i className="fas fa-info-circle"></i> {alert.msg}
             </div>
         )
-    )
-}
+    );
+};
 
 export default AlertMe

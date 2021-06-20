@@ -56,7 +56,19 @@ const GithubState = props => {
         });
     };
 
-    // Get Repos
+    // Get Repos:
+    const getUserRepos = async (username) => {
+    setLoading();
+
+    const res = await axios.get(`https://api.github.com/users/${username}/repos?per_page=5&
+    sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&
+    client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+
+    dispatch({
+        type: GET_REPOS,
+        payload: res.data
+    })
+  };
 
     // Clear Users search:
         const clearUsers = () => dispatch({ type: CLEAR_USERS});
@@ -83,8 +95,14 @@ const GithubState = props => {
             searchUsers,
             clearUsers,
             getUser,
+            getUserRepos,
 
         }}
+        // props.children will display whatever you include between the opening
+        // and closing tags when invoking a component.
+        // so its basically a catch all for a given component.
+        // when this component is called in App.js props.children will ensure that
+        // all the children of that component are displayed properly.
     >
         {props.children}
 
